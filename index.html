@@ -1775,6 +1775,36 @@
       }
 
       // ==================== PWA MANIFEST & SERVICE WORKER ====================
+      function createPngAppIconDataUrl(size) {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return createSvgAppIconDataUrl();
+
+          // Soft rose & cookie rounded background
+          ctx.fillStyle = '#ffecf1';
+          ctx.beginPath();
+          ctx.roundRect(0, 0, size, size, Math.round(size * 0.22));
+          ctx.fill();
+
+          ctx.fillStyle = '#ffd9e3';
+          ctx.beginPath();
+          ctx.arc(size * 0.5, size * 0.48, size * 0.31, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.font = `${Math.round(size * 0.42)}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
+          ctx.fillText('🌹', size * 0.5, size * 0.53);
+
+          return canvas.toDataURL('image/png');
+        } catch (err) {
+          return createSvgAppIconDataUrl();
+        }
+      }
+
       function createSvgAppIconDataUrl() {
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
           <rect width="512" height="512" rx="112" fill="#ffecf1"/>
@@ -1784,24 +1814,55 @@
         return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
       }
 
+      function isInAppOrRestrictedWebview() {
+        const ua = navigator.userAgent || '';
+        return /FBAN|FBAV|Instagram|Line|MicroMessenger|Snapchat|Pinterest|TikTok|wv\)/i.test(ua);
+      }
+
+      function downloadStandaloneHtmlApp() {
+        try {
+          const docClone = document.documentElement.cloneNode(true);
+          const cleanHtml = '<!DOCTYPE html>\n' + docClone.outerHTML;
+          const blob = new Blob([cleanHtml], { type: 'text/html;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = "Afsana's-Daily-Life-App.html";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+          showToast('অ্যাপ ফাইল ডাউনলোড শুরু হয়েছে!', '📲');
+        } catch (err) {
+          showToast('সরাসরি ডাউনলোড সীমাবদ্ধ থাকলে ব্রাউজার মেনু থেকে "Add to Home Screen" দিন।', '📲');
+        }
+      }
+
       function registerPwaSupport() {
         try {
-          const iconDataUrl = createSvgAppIconDataUrl();
+          const icon192 = createPngAppIconDataUrl(192);
+          const icon512 = createPngAppIconDataUrl(512);
           const manifest = {
+            id: './',
             name: APP_CONFIG.appName,
             short_name: APP_CONFIG.shortName,
-            start_url: window.location.href,
+            start_url: './',
             scope: './',
             display: 'standalone',
-            orientation: 'portrait-primary',
             background_color: '#fff7f9',
             theme_color: '#e55f85',
             description: "Afsana's Daily Life — Meals, calories, gentle yoga, faith & Noor AI companion.",
             icons: [
               {
-                src: iconDataUrl,
-                sizes: '192x192 512x512',
-                type: 'image/svg+xml',
+                src: icon192,
+                sizes: '192x192',
+                type: 'image/png',
+                purpose: 'any',
+              },
+              {
+                src: icon512,
+                sizes: '512x512',
+                type: 'image/png',
                 purpose: 'any maskable',
               },
             ],
@@ -1815,13 +1876,21 @@
             document.head.appendChild(link);
           }
           link.href = manifestUrl;
+
+          let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+          if (!appleIcon) {
+            appleIcon = document.createElement('link');
+            appleIcon.rel = 'apple-touch-icon';
+            document.head.appendChild(appleIcon);
+          }
+          appleIcon.href = icon192;
         } catch (err) {
           console.error('Manifest setup skipped:', err);
         }
 
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
           const swCode = `
-            const CACHE_NAME = 'afsana-daily-pwa-v2';
+            const CACHE_NAME = 'afsana-daily-pwa-v3';
             self.addEventListener('install', (event) => {
               self.skipWaiting();
             });
@@ -1855,7 +1924,7 @@
           deferredInstallPrompt = null;
           const modal = document.getElementById('pwaInstallModal');
           if (modal) modal.classList.add('hidden');
-          showToast("Afsana's Daily Life installed!", '📲');
+          showToast("Afsana's Daily Life ফোনের হোম স্ক্রিনে ইনস্টল হয়েছে!", '📲');
         });
       }
 
@@ -1870,11 +1939,18 @@
             if (choice && choice.outcome === 'accepted') {
               const modal = document.getElementById('pwaInstallModal');
               if (modal) modal.classList.add('hidden');
-              showToast('App installed on your device!', '📲');
+              showToast('অ্যাপ ফোনে ইনস্টল হয়ে গেছে!', '📲');
               return true;
             }
           } catch (err) {}
         }
+
+        if (isInAppOrRestrictedWebview()) {
+          openPwaModal();
+          showToast('ইন-অ্যাপ ব্রাউজারে ব্লক হলে Chrome বা Safari-তে লিংক খুলে ইনস্টল করুন।', '📲');
+          return true;
+        }
+
         return false;
       }
 
@@ -1884,7 +1960,26 @@
         if (nativeBtn) {
           nativeBtn.classList.toggle('hidden', !deferredInstallPrompt);
         }
-        if (modal) modal.classList.remove('hidden');
+        if (modal) {
+          const existingNote = modal.querySelector('[data-app-download-helper]');
+          if (!existingNote) {
+            const helperBox = document.createElement('div');
+            helperBox.setAttribute('data-app-download-helper', '1');
+            helperBox.className = 'rounded-2xl bg-blush-100/80 border border-blush-200 p-3 text-xs text-rosewood flex flex-col sm:flex-row sm:items-center justify-between gap-2';
+            helperBox.innerHTML = `
+              <span><strong>সরাসরি ফাইল সেভ করতে চাইলে:</strong> অ্যাপের কপি ডাউনলোড করে ফোনে রাখতে পারেন।</span>
+              <button type="button" id="modalDownloadAppFileBtn" class="px-3 py-1.5 rounded-xl bg-rosewood hover:bg-blush-800 text-white text-xs font-bold transition shrink-0">
+                ⬇️ Download App File
+              </button>
+            `;
+            const footerBtns = modal.querySelector('.flex.justify-end.gap-2');
+            if (footerBtns && footerBtns.parentNode) {
+              footerBtns.parentNode.insertBefore(helperBox, footerBtns);
+              helperBox.querySelector('#modalDownloadAppFileBtn').addEventListener('click', downloadStandaloneHtmlApp);
+            }
+          }
+          modal.classList.remove('hidden');
+        }
       }
 
       // ==================== AUTHENTICATION & PASSWORD MANAGEMENT ====================
@@ -3348,15 +3443,24 @@
         // PWA Install triggers
         document.getElementById('authInstallAppBtn').addEventListener('click', async () => {
           const installed = await triggerInstallAction();
-          if (!installed) openPwaModal();
+          if (!installed) {
+            downloadStandaloneHtmlApp();
+            openPwaModal();
+          }
         });
         document.getElementById('headerInstallAppBtn').addEventListener('click', async () => {
           const installed = await triggerInstallAction();
-          if (!installed) openPwaModal();
+          if (!installed) {
+            downloadStandaloneHtmlApp();
+            openPwaModal();
+          }
         });
         document.getElementById('openPwaGuideBtn').addEventListener('click', async () => {
           const installed = await triggerInstallAction();
-          if (!installed) openPwaModal();
+          if (!installed) {
+            downloadStandaloneHtmlApp();
+            openPwaModal();
+          }
         });
         document.getElementById('closePwaModalBtn').addEventListener('click', () => {
           document.getElementById('pwaInstallModal').classList.add('hidden');
