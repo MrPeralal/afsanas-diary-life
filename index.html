@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#e55f85" />
-  <title>Afsana's Diary Life — Daily Wellness &amp; Meal Journal</title>
+  <title>Afsana's Daily Life — Daily Wellness &amp; Meal Journal</title>
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -189,11 +189,11 @@
           />
           <div id="authPortraitFallback" class="hidden float-slow flex flex-col items-center justify-center p-4 rounded-3xl bg-white/80 border border-blush-200">
             <span class="text-5xl">🧘‍♀️</span>
-            <span class="text-xs font-bold text-rosewood mt-1">Afsana's Diary Life</span>
+            <span class="text-xs font-bold text-rosewood mt-1">Afsana's Daily Life</span>
           </div>
         </div>
         <div class="w-24 h-2.5 rounded-full bg-blush-400/40 blur-sm levitate-shadow mt-1"></div>
-        <h2 class="font-serif text-xl sm:text-2xl font-bold text-rosewood mt-3">Afsana's Diary Life</h2>
+        <h2 class="font-serif text-xl sm:text-2xl font-bold text-rosewood mt-3">Afsana's Daily Life</h2>
         <p class="text-xs text-warmmuted mt-1.5 leading-relaxed">
           Private rose &amp; cookie sanctuary for daily meals, calories, gentle movement, prayer pauses, reminders, and Noor AI.
         </p>
@@ -332,14 +332,14 @@
       <div class="flex items-center justify-between">
         <h3 class="font-serif text-xl font-bold text-rosewood flex items-center gap-2">
           <span>📲</span>
-          <span>Install Afsana's Diary Life App</span>
+          <span>Install Afsana's Daily Life App</span>
         </h3>
         <button type="button" id="closePwaModalBtn" class="w-8 h-8 rounded-xl bg-blush-50 hover:bg-blush-100 text-rosewood font-bold">
           ✕
         </button>
       </div>
       <p class="text-xs sm:text-sm text-warmmuted leading-relaxed">
-        Add Afsana's Diary Life to your mobile home screen so it opens like a standalone app without browser bars.
+        Add Afsana's Daily Life to your mobile home screen so it opens like a standalone app without browser bars.
       </p>
       <div class="space-y-3 text-xs text-rosewood">
         <div class="rounded-2xl bg-blush-50 border border-blush-200 p-3.5 space-y-1">
@@ -374,7 +374,7 @@
           </div>
           <div class="min-w-0">
             <span class="font-serif text-sm sm:text-base font-bold text-rosewood truncate block">
-              Afsana's Diary Life
+              Afsana's Daily Life
             </span>
             <span id="headerSyncStatus" class="text-[10px] font-semibold text-warmmuted truncate block">
               Synced with Google Sheet
@@ -537,7 +537,7 @@
             </div>
 
             <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-rosewood leading-tight">
-              Afsana's Diary Life
+              Afsana's Daily Life
             </h2>
 
             <p id="heroGreetingMessage" class="text-xs sm:text-sm text-rosewood/85 leading-relaxed max-w-2xl mx-auto lg:mx-0">
@@ -1274,7 +1274,7 @@
     <footer class="w-full border-t border-blush-200/80 bg-white/70 py-4 px-4 sm:px-8 mt-8">
       <div class="w-full max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-warmmuted">
         <p class="font-medium text-rosewood">
-          🌹 Afsana's Diary Life — Crafted with care for gentle daily meals, movement &amp; faith reflections.
+          🌹 Afsana's Daily Life — Crafted with care for gentle daily meals, movement &amp; faith reflections.
         </p>
         <p class="text-center sm:text-right">
           General wellness &amp; lifestyle journal only; not medical or clinical advice. Consult a doctor for personal health guidance.
@@ -1285,7 +1285,7 @@
 
   <script>
     /**
-     * Afsana's Diary Life — Complete Portal & Installable PWA
+     * Afsana's Daily Life — Complete Portal & Installable PWA
      * Modular APP_CONFIG at top for effortless future edits to email, default password,
      * Google Apps Script sync URL, hero image, meals, exercises, prayers, and Hadiths.
      */
@@ -1293,8 +1293,8 @@
       'use strict';
 
       const APP_CONFIG = {
-        appName: "Afsana's Diary Life",
-        shortName: "Afsana Diary",
+        appName: "Afsana's Daily Life",
+        shortName: "Afsana Daily",
         storageKey: 'afsanas_diary_life_v3',
         sessionKey: 'afsanas_diary_session_v3',
         authorizedEmail: 'mim008887@gmail.com',
@@ -1775,37 +1775,53 @@
       }
 
       // ==================== PWA MANIFEST & SERVICE WORKER ====================
+      function createSvgAppIconDataUrl() {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+          <rect width="512" height="512" rx="112" fill="#ffecf1"/>
+          <circle cx="256" cy="242" r="142" fill="#ffd9e3"/>
+          <text x="256" y="292" text-anchor="middle" font-size="180">🌹</text>
+        </svg>`;
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      }
+
       function registerPwaSupport() {
         try {
+          const iconDataUrl = createSvgAppIconDataUrl();
           const manifest = {
             name: APP_CONFIG.appName,
             short_name: APP_CONFIG.shortName,
-            start_url: './',
+            start_url: window.location.href,
+            scope: './',
             display: 'standalone',
+            orientation: 'portrait-primary',
             background_color: '#fff7f9',
             theme_color: '#e55f85',
-            description: "Afsana's Diary Life — Meals, calories, gentle yoga, faith & Noor AI companion.",
+            description: "Afsana's Daily Life — Meals, calories, gentle yoga, faith & Noor AI companion.",
             icons: [
               {
-                src: APP_CONFIG.heroCutoutUrl,
-                sizes: '512x512',
-                type: 'image/png',
+                src: iconDataUrl,
+                sizes: '192x192 512x512',
+                type: 'image/svg+xml',
+                purpose: 'any maskable',
               },
             ],
           };
           const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
           const manifestUrl = URL.createObjectURL(manifestBlob);
-          const link = document.createElement('link');
-          link.rel = 'manifest';
+          let link = document.querySelector('link[rel="manifest"]');
+          if (!link) {
+            link = document.createElement('link');
+            link.rel = 'manifest';
+            document.head.appendChild(link);
+          }
           link.href = manifestUrl;
-          document.head.appendChild(link);
         } catch (err) {
           console.error('Manifest setup skipped:', err);
         }
 
         if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
           const swCode = `
-            const CACHE_NAME = 'afsana-diary-pwa-v1';
+            const CACHE_NAME = 'afsana-daily-pwa-v2';
             self.addEventListener('install', (event) => {
               self.skipWaiting();
             });
@@ -1834,6 +1850,32 @@
           const nativeBtn = document.getElementById('triggerNativeInstallBtn');
           if (nativeBtn) nativeBtn.classList.remove('hidden');
         });
+
+        window.addEventListener('appinstalled', () => {
+          deferredInstallPrompt = null;
+          const modal = document.getElementById('pwaInstallModal');
+          if (modal) modal.classList.add('hidden');
+          showToast("Afsana's Daily Life installed!", '📲');
+        });
+      }
+
+      async function triggerInstallAction() {
+        if (deferredInstallPrompt) {
+          try {
+            deferredInstallPrompt.prompt();
+            const choice = await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+            const nativeBtn = document.getElementById('triggerNativeInstallBtn');
+            if (nativeBtn) nativeBtn.classList.add('hidden');
+            if (choice && choice.outcome === 'accepted') {
+              const modal = document.getElementById('pwaInstallModal');
+              if (modal) modal.classList.add('hidden');
+              showToast('App installed on your device!', '📲');
+              return true;
+            }
+          } catch (err) {}
+        }
+        return false;
       }
 
       function openPwaModal() {
@@ -2133,7 +2175,7 @@
             }
             if ('Notification' in window && Notification.permission === 'granted') {
               try {
-                new Notification("Afsana's Diary Life — Noor", { body: `${rem.text} (${rem.time})` });
+                new Notification("Afsana's Daily Life — Noor", { body: `${rem.text} (${rem.time})` });
               } catch (e) {}
             }
           }
@@ -2761,27 +2803,102 @@
         };
       }
 
+      function isBanglaText(str) {
+        return /[\u0980-\u09FF]/.test(String(str || ''));
+      }
+
+      function buildFullAppScanSnapshot(dateStr) {
+        const log = ensureDayLog(dateStr);
+        const s = getDaySummary(dateStr);
+        const checkedMeals = [];
+        state.mealSlots.forEach((slot) => {
+          slot.options.forEach((opt) => {
+            if (log.checkedOptionIds.includes(opt.id)) {
+              checkedMeals.push(`${slot.title}: ${opt.name} (${opt.calories} kcal)`);
+            }
+          });
+          log.customItems
+            .filter((c) => c.slotId === slot.id && c.checked)
+            .forEach((c) => checkedMeals.push(`${slot.title} [Custom]: ${c.name} (${c.calories} kcal)`));
+        });
+
+        const doneHabits = state.habits
+          .filter((h) => log.habitsDone.includes(h.id))
+          .map((h) => h.label);
+        const doneMovements = GENTLE_MOVEMENTS
+          .filter((m) => log.movementsDone.includes(m.id))
+          .map((m) => `${m.title} (${m.timing})`);
+        const donePrayers = state.prayers
+          .filter((p) => log.prayersDone.includes(p.id))
+          .map((p) => `${p.name} [${p.time}]`);
+        const pendingPrayers = state.prayers
+          .filter((p) => !log.prayersDone.includes(p.id))
+          .map((p) => `${p.name} [${p.time}]`);
+        const activeReminders = state.reminders
+          .filter((r) => !r.done)
+          .slice(0, 6)
+          .map((r) => `${r.text} on ${r.date} at ${r.time}`);
+        const recordedDates = Object.keys(state.logs).sort();
+        const currentHadith = HADITH_CARDS[state.hadithIndex % HADITH_CARDS.length];
+
+        return {
+          dateStr,
+          summary: s,
+          checkedMeals,
+          doneHabits,
+          doneMovements,
+          donePrayers,
+          pendingPrayers,
+          activeReminders,
+          recordedDatesCount: recordedDates.length,
+          recentDates: recordedDates.slice(-5),
+          note: log.note || '',
+          currentHadithTitle: currentHadith ? currentHadith.source : '',
+          recentChat: state.chatHistory.slice(-6).map((m) => `${m.sender === 'user' ? 'Afsana' : 'Noor'}: ${m.text}`),
+          detailedPromptText: [
+            `Active Date: ${dateStr} (Follow Today: ${state.followToday ? 'Yes' : 'No'}).`,
+            `Calories: ${s.totalCalories} / ${state.goals.calories} kcal across ${s.slotsCompletedCount}/${s.totalSlots} meal slots.`,
+            `Checked Meals: ${checkedMeals.length ? checkedMeals.join('; ') : 'None yet'}.`,
+            `Water: ${s.water} / ${state.goals.water} glasses.`,
+            `Lifestyle Habits Done (${s.habitsDoneCount}/${s.totalHabits}): ${doneHabits.length ? doneHabits.join('; ') : 'None yet'}.`,
+            `Gentle Movements Done (${s.movementsDoneCount}/${s.totalMovements}): ${doneMovements.length ? doneMovements.join('; ') : 'None yet'}.`,
+            `Prayers Done (${s.prayersDoneCount}/${s.totalPrayers}): ${donePrayers.length ? donePrayers.join(', ') : 'None yet'}. Pending: ${pendingPrayers.join(', ') || 'None'}.`,
+            `Diary Note: ${log.note ? log.note : 'Empty'}.`,
+            `Active Reminders: ${activeReminders.length ? activeReminders.join(' | ') : 'None'}.`,
+            `Total Recorded Days in History: ${recordedDates.length} (${recordedDates.slice(-4).join(', ') || 'none'}).`,
+            `Noor Bond: ${state.bondPoints} pts.`,
+          ].join('\n'),
+        };
+      }
+
       async function askGeminiOrSmartFriend(userText, dateStr) {
         addBondPoints(4);
-
+        const wantsBangla = isBanglaText(userText) || /\b(bangla|bengali|বাংলা)\b/i.test(userText);
         const lower = userText.toLowerCase();
-        if (lower.includes('prayer') && (lower.includes('season') || lower.includes('update') || lower.includes('winter') || lower.includes('summer') || lower.includes('dhaka'))) {
+        const scan = buildFullAppScanSnapshot(dateStr);
+
+        if (
+          lower.includes('prayer') &&
+          (lower.includes('season') || lower.includes('update') || lower.includes('winter') || lower.includes('summer') || lower.includes('dhaka'))
+        ) {
           const season = applySeasonalPrayerTimes(true);
-          return `I updated your prayer schedule to fit ${season.badge}: ${season.summary} You can also edit any time directly in Faith & Reflection.`;
+          return wantsBangla
+            ? `আফসানা, আমি বর্তমান ঋতু ও ঢাকার সময় অনুযায়ী নামাজের সময়সূচি আপডেট করে দিয়েছি (${season.badge})। তুমি চাইলে Faith & Reflection ট্যাবে গিয়ে যেকোনো সময় নিজের মতো বদলে নিতে পারো।`
+            : `I updated your prayer schedule to fit ${season.badge}: ${season.summary} You can also edit any time directly in Faith & Reflection.`;
         }
 
         const parsedReminder = parseReminderFromMessage(userText);
         if (parsedReminder) {
           state.reminders.unshift(parsedReminder);
-          return `Got it, Afsana! I saved a reminder for ${parsedReminder.date} at ${parsedReminder.time}: "${parsedReminder.text}". I’ll alert you right on time.`;
+          return wantsBangla
+            ? `ঠিক আছে আফসানা! আমি তোমার জন্য ${parsedReminder.date} তারিখ ও ${parsedReminder.time} সময়ে "${parsedReminder.text}" রিমাইন্ডার সেভ করে রেখেছি। সময় হলে আমি অবশ্যই মনে করিয়ে দেব।`
+            : `Got it, Afsana! I saved a reminder for ${parsedReminder.date} at ${parsedReminder.time}: "${parsedReminder.text}". I’ll alert you right on time.`;
         }
 
         const key = (state.goals.geminiApiKey || '').trim();
-        const s = getDaySummary(dateStr);
-        const contextLine = `User Afsana's day (${dateStr}): ${s.totalCalories} kcal, ${s.slotsCompletedCount}/${s.totalSlots} meal slots, ${s.water}/${state.goals.water} water glasses, ${s.movementsDoneCount}/${s.totalMovements} movements, ${s.habitsDoneCount}/${s.totalHabits} habits. Friendship bond points: ${state.bondPoints}.`;
-
         if (key) {
           try {
+            const historyBlock = scan.recentChat.join('\n');
             const res = await fetch(
               `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`,
               {
@@ -2792,7 +2909,7 @@
                     {
                       parts: [
                         {
-                          text: `You are Noor, a warm, mature, attentive best-friend AI and personal assistant for Afsana's Diary Life. Offer gentle habit/movement/food ideas, answer questions clearly, and keep a loving friend tone (2-4 sentences). ${contextLine}\nAfsana says: ${userText}`,
+                          text: `You are Noor, a warm, empathetic, insightful best-friend AI and personal assistant inside "Afsana's Daily Life". Reply in the same language Afsana uses (fluent natural Bangla if she writes/speaks in Bangla, English if she uses English, or match whatever language she speaks). Always ground your advice, observations, and answers in a full scan of her app data below—never give generic robotic templates. Be warm, helpful, clear, and detailed where helpful.\n\n[FULL APP SCAN]\n${scan.detailedPromptText}\n\n[RECENT CONVERSATION]\n${historyBlock}\n\n[AFSANA SAYS]\n${userText}`,
                         },
                       ],
                     },
@@ -2810,16 +2927,38 @@
           }
         }
 
+        const s = scan.summary;
+        const mealsSummaryText = scan.checkedMeals.length
+          ? scan.checkedMeals.slice(0, 4).join(', ')
+          : 'no meals checked yet';
+        const moveSummaryText = scan.doneMovements.length
+          ? scan.doneMovements.join(', ')
+          : 'no gentle movement checked yet';
+        const prayerSummaryText = scan.donePrayers.length
+          ? `${scan.donePrayers.length}/${s.totalPrayers} done (${scan.donePrayers.join(', ')})`
+          : `0/${s.totalPrayers} checked yet`;
+
+        if (wantsBangla) {
+          if (lower.includes('স্ক্যান') || lower.includes('আজকের') || lower.includes('রিপোর্ট') || lower.includes('অবস্থা') || lower.includes('কেমন')) {
+            return `আফসানা, আমি তোমার আজকের (${dateStr}) পুরো অ্যাপ স্ক্যান করে দেখলাম—এখন পর্যন্ত ${s.totalCalories} ক্যালোরি (টার্গেট ${state.goals.calories} kcal), পানি ${s.water}/${state.goals.water} গ্লাস, খাবার (${mealsSummaryText}), এক্সারসাইজ/মুভমেন্ট (${moveSummaryText}), এবং নামাজ (${prayerSummaryText}) লগ করা আছে। তুমি চাইলে আমি এখনই সামনের ছোট্ট মিশন বা খাবারের আইডিয়া গুছিয়ে দিতে পারি—বলো আজ মনটা কেমন আছে?`;
+          }
+          if (lower.includes('ক্লান্ত') || lower.includes('খারাপ') || lower.includes('ব্যথা') || lower.includes('মন') || lower.includes('ঘুম')) {
+            return `আমি পাশে আছি আফসানা। তোমার আজকের লগে ${s.water}/${state.goals.water} গ্লাস পানি আর ${s.totalCalories} kcal দেখাচ্ছে। শরীর বা মন একটু ভারী লাগলে জোর কোরো না—একটু হালকা কুসুম গরম পানি বা পছন্দমতো নরম খাবার নাও, আর না হয় Child’s Pose বা Butterfly stretch করে একটু আরাম নাও। কোন জিনিসটা এখন তোমাকে বেশি কষ্ট দিচ্ছে?`;
+          }
+          return `হ্যালো আফসানা! আমি নূর—তোমার বন্ধু আর পার্সোনাল অ্যাসিস্ট্যান্ট। তোমার অ্যাপের (${dateStr}) তথ্য অনুযায়ী এখন ক্যালোরি ${s.totalCalories}/${state.goals.calories} kcal, পানি ${s.water}/${state.goals.water} গ্লাস, মুভমেন্ট ${s.movementsDoneCount}/${s.totalMovements}টি, আর নামাজ ${prayerSummaryText}। তুমি বাংলা বা ইংরেজি যেকোনো ভাষায় কথা বলতে পারো—কোনো কিছু জানতে চাইলে, রিমাইন্ডার সেট করতে চাইলে, বা সারাদিনের হিসাব নিয়ে কথা বলতে চাইলে নির্দ্বিধায় বলো।`;
+        }
+
+        if (lower.includes('scan') || lower.includes('summary') || lower.includes('today') || lower.includes('progress')) {
+          return `I scanned your full app for ${dateStr}, Afsana: you're at ${s.totalCalories}/${state.goals.calories} kcal, ${s.water}/${state.goals.water} glasses of water, checked items (${mealsSummaryText}), movement (${moveSummaryText}), and prayers (${prayerSummaryText}). We have ${scan.recordedDatesCount} recorded day(s) in history—tell me what you'd like to focus on next!`;
+        }
         if (lower.includes('mission') || lower.includes('tomorrow') || lower.includes('next')) {
-          return `For your next gentle mission, aim for a calm morning glass of water, one colorful fruit or green dish, and a short soothing stretch. No pressure—just steady warmth! (${contextLine})`;
+          const nextWater = Math.max(0, state.goals.water - s.water);
+          return `Looking at your current app state (${s.totalCalories} kcal, ${s.water}/${state.goals.water} water, ${s.movementsDoneCount}/${s.totalMovements} movements), your next gentle step is ${nextWater > 0 ? `sipping ${nextWater} more glass(es) of water` : 'keeping your hydration steady'} and picking one soothing movement or balanced meal that feels good to you.`;
         }
         if (lower.includes('tired') || lower.includes('low') || lower.includes('sad') || lower.includes('heavy') || lower.includes('pain') || lower.includes('cramp')) {
-          return `I’m right beside you, Afsana. On tender or heavy days, keep things gentle—sip warm water, choose an easy meal you enjoy, try a slow butterfly or child’s pose stretch, and let yourself rest.`;
+          return `I’m right here with you, Afsana. With ${s.totalCalories} kcal and ${s.water}/${state.goals.water} glasses of water logged today, don't push hard—keep meals light and comforting, try a gentle butterfly or child’s pose stretch, and rest whenever you need.`;
         }
-        if (lower.includes('explain') || lower.includes('what is') || lower.includes('how') || lower.includes('should i')) {
-          return `Think of it in simple steps, Afsana: start small, listen to how your body feels afterward, and pick what feels doable today. Right now you have ${s.totalCalories} kcal and ${s.water}/${state.goals.water} glasses of water logged for ${dateStr}.`;
-        }
-        return `I’m always here for you, Afsana! Right now you have ${s.totalCalories} kcal and ${s.water}/${state.goals.water} glasses of water logged for ${dateStr}. Tell me what you’re planning, what you need remembered, or how you feel today.`;
+        return `I’m right here with you, Afsana! Scanning your app for ${dateStr}: ${s.totalCalories}/${state.goals.calories} kcal, ${s.water}/${state.goals.water} glasses of water, ${moveSummaryText}, and prayers (${prayerSummaryText}). Ask me in Bangla or English about your meals, yoga, reminders, or anything on your mind!`;
       }
 
       function renderAiSection() {
@@ -3207,9 +3346,18 @@
         });
 
         // PWA Install triggers
-        document.getElementById('authInstallAppBtn').addEventListener('click', openPwaModal);
-        document.getElementById('headerInstallAppBtn').addEventListener('click', openPwaModal);
-        document.getElementById('openPwaGuideBtn').addEventListener('click', openPwaModal);
+        document.getElementById('authInstallAppBtn').addEventListener('click', async () => {
+          const installed = await triggerInstallAction();
+          if (!installed) openPwaModal();
+        });
+        document.getElementById('headerInstallAppBtn').addEventListener('click', async () => {
+          const installed = await triggerInstallAction();
+          if (!installed) openPwaModal();
+        });
+        document.getElementById('openPwaGuideBtn').addEventListener('click', async () => {
+          const installed = await triggerInstallAction();
+          if (!installed) openPwaModal();
+        });
         document.getElementById('closePwaModalBtn').addEventListener('click', () => {
           document.getElementById('pwaInstallModal').classList.add('hidden');
         });
@@ -3217,11 +3365,7 @@
           document.getElementById('pwaInstallModal').classList.add('hidden');
         });
         document.getElementById('triggerNativeInstallBtn').addEventListener('click', async () => {
-          if (!deferredInstallPrompt) return;
-          deferredInstallPrompt.prompt();
-          await deferredInstallPrompt.userChoice;
-          deferredInstallPrompt = null;
-          document.getElementById('pwaInstallModal').classList.add('hidden');
+          await triggerInstallAction();
         });
 
         // Navigation & Menu
@@ -3409,29 +3553,70 @@
           showToast(state.voiceReplyEnabled ? 'Noor voice replies enabled' : 'Noor voice replies muted', '🔊');
         });
 
+        let activeSpeechRec = null;
         document.getElementById('voiceMicBtn').addEventListener('click', () => {
-          const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-          if (!SpeechRec) {
-            showToast('Voice input is not supported in this browser; type your message instead.', '🎙️');
+          const micBtn = document.getElementById('voiceMicBtn');
+          if (activeSpeechRec) {
+            try { activeSpeechRec.stop(); } catch (e) {}
+            activeSpeechRec = null;
+            micBtn.classList.remove('bg-rosewood', 'text-white');
             return;
           }
+
+          const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!SpeechRec) {
+            showToast('এই ব্রাউজারে মাইক সাপোর্ট নেই—নিচে লিখে মেসেজ দিন।', '🎙️');
+            return;
+          }
+
           try {
             const rec = new SpeechRec();
-            rec.lang = 'en-US';
-            rec.interimResults = false;
-            showToast('Listening to Afsana...', '🎙️');
+            const currentDraft = document.getElementById('aiFriendChatInput').value || '';
+            rec.lang = isBanglaText(currentDraft) ? 'bn-BD' : 'bn-BD';
+            rec.interimResults = true;
+            rec.maxAlternatives = 1;
+            activeSpeechRec = rec;
+            micBtn.classList.add('bg-rosewood', 'text-white');
+            showToast('মাইক চালু হয়েছে (বাংলা/ইংরেজি বলুন)...', '🎙️');
+
             rec.onresult = (event) => {
-              const spoken = event.results?.[0]?.[0]?.transcript || '';
-              if (spoken) {
-                const input = document.getElementById('aiFriendChatInput');
-                input.value = spoken;
+              let finalTranscript = '';
+              let interimTranscript = '';
+              for (let i = event.resultIndex; i < event.results.length; i++) {
+                const txt = event.results[i][0]?.transcript || '';
+                if (event.results[i].isFinal) finalTranscript += txt;
+                else interimTranscript += txt;
+              }
+              const input = document.getElementById('aiFriendChatInput');
+              input.value = (finalTranscript || interimTranscript).trim();
+              if (finalTranscript.trim()) {
+                activeSpeechRec = null;
+                micBtn.classList.remove('bg-rosewood', 'text-white');
                 document.getElementById('aiFriendChatForm').requestSubmit();
               }
             };
-            rec.onerror = () => showToast('Could not capture voice—please try again or type.', '🎙️');
+
+            rec.onerror = (ev) => {
+              activeSpeechRec = null;
+              micBtn.classList.remove('bg-rosewood', 'text-white');
+              const errCode = ev && ev.error ? ev.error : '';
+              if (errCode === 'not-allowed' || errCode === 'permission-denied') {
+                showToast('মাইক্রোফোন পারমিশন ব্লক করা আছে—ব্রাউজার সেটিংস থেকে Allow দিন।', '🎙️');
+              } else {
+                showToast('ভয়েস ক্যাপচার করা যায়নি—আবার চেষ্টা করুন বা টাইপ করুন।', '🎙️');
+              }
+            };
+
+            rec.onend = () => {
+              activeSpeechRec = null;
+              micBtn.classList.remove('bg-rosewood', 'text-white');
+            };
+
             rec.start();
           } catch (err) {
-            showToast('Microphone unavailable; typing works smoothly!', '🎙️');
+            activeSpeechRec = null;
+            micBtn.classList.remove('bg-rosewood', 'text-white');
+            showToast('মাইক ওপেন করা যায়নি; টাইপ করে কথা বলতে পারেন!', '🎙️');
           }
         });
 
@@ -3481,7 +3666,7 @@
           saveState();
           renderAiSection();
           if (state.voiceReplyEnabled) {
-            speakText(reply, 'en-US');
+            speakText(reply, isBanglaText(reply) ? 'bn-BD' : 'en-US');
           }
         });
 
